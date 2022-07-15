@@ -3,12 +3,10 @@ package com.obm.ukrainiansmessenger.servise;
 import com.obm.ukrainiansmessenger.models.Role;
 import com.obm.ukrainiansmessenger.models.User;
 import com.obm.ukrainiansmessenger.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.UUID;
