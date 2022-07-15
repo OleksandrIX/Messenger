@@ -23,7 +23,11 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        if (user.getActivationCode()!=null) {
+            return null;
+        }
+        return user;
     }
 
     public boolean addUser(User user){
@@ -35,10 +39,10 @@ public class UserService implements UserDetailsService {
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
         userRepository.save(user);
-        if(user.getEmail()!=null){
+        if((user.getEmail()!=null)){
             String message = String.format(
                     "Привіт, %s\n" +
-                            "Ласкаво просимо до Українського Месенджера. Будь ласка, перейдіть за посиланням: http://localhost:8080/active/%s для підтвердження вашої пошти.",
+                            "Ласкаво просимо до Українського Месенджера. Будь ласка, перейдіть за посиланням: http://localhost:8080/activate/%s для підтвердження вашої пошти.",
                     user.getUsername(),
                     user.getActivationCode()
             );
