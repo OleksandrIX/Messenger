@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class RegistrationController {
+public class RegistrationController{
     private final UserService userService;
 
     public RegistrationController(UserService userService) {
@@ -43,4 +43,5 @@ public class RegistrationController {
 
         return "login";
     }
+
 }
