@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -25,45 +26,70 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user.getActivationCode()!=null) {
-            return null;
+            user.setActive(false);
         }
         return user;
     }
 
-    public boolean addUser(User user){
-        User userFromDb = userRepository.findByUsername(user.getUsername());
+    public void addUser(User user){
+        User userFromDb = userRepository.findByEmail(user.getEmail());
         if (userFromDb != null){
-            return false;
+            return;
         }
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
-        user.setActivationCode(UUID.randomUUID().toString());
+        StringBuilder code = new StringBuilder();
+        Random random = new Random();
+        for(int i = 0; i<6;i++){
+            code.append(random.nextInt(10));
+        }
+        user.setActivationCode(String.valueOf(code));
         userRepository.save(user);
-        if((user.getEmail()!=null)){
+        String message = String.format(
+                "Ласкаво просимо до Українського Месенджера. Ваша код активації%s.",
+                user.getActivationCode()
+        );
+        mailSender.send(user.getEmail(), "Код активації", message);
+    }
+
+    public boolean searchEmailInDB(String email) {
+        User userFromDb = userRepository.findByEmail(email);
+        if (userFromDb!=null){
+            userFromDb.setActive(true);
+            StringBuilder code = new StringBuilder();
+            Random random = new Random();
+            for(int i = 0; i<6;i++){
+                code.append(random.nextInt(10));
+            }
+            userFromDb.setActivationCode(String.valueOf(code));
             String message = String.format(
-                    "Привіт, %s\n" +
-                            "Ласкаво просимо до Українського Месенджера. Будь ласка, перейдіть за посиланням: http://localhost:8080/activate/%s для підтвердження вашої пошти.",
-                    user.getUsername(),
-                    user.getActivationCode()
+                     "Ласкаво просимо до Українського Месенджера. Ваша код активації%s.",
+                    userFromDb.getActivationCode()
             );
-            mailSender.send(user.getEmail(), "Код активації", message);
+            mailSender.send(userFromDb.getEmail(), "Код активації", message);
+            userRepository.save(userFromDb);
         }
 
         return true;
     }
 
-    public MailSender getMailSender() {
-        return mailSender;
-    }
-
-    public boolean activeUser(String code) {
+    public User activeUser(String code) {
         User user = userRepository.findByActivationCode(code);
         if(user==null){
-            return false;
+            return null;
         }
+
         user.setActivationCode(null);
         userRepository.save(user);
 
+        return user;
+    }
+
+    public boolean save(String username, String password, User user) {
+        user.setUsername(username);
+        user.setPassword(password);
+
+        userRepository.save(user);
         return true;
     }
 }

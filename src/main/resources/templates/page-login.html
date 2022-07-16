@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=http://www.thymeleaf.org
+      xmlns:sec=http://www.thymeleaf.org/extras/spring-security
+      xmlns:shiro=http://www.pollix.at/thymeleaf/shiro>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form th:action="@{/login}" method="post">
+    <div>
+        <input type="hidden" id="username" name="username" th:value="${user.getUsername()}" >
+    </div>
+    <div><label for="password" >Password</label>
+        <input type="password" id="password" name="password" placeholder="Password">
+    </div>
+    <div><input type="submit" value="OK"/></div>
+</form>
+
+</body>
+</html>
