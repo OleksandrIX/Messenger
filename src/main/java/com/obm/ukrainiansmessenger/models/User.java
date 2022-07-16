@@ -27,9 +27,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @OneToMany
-    @CollectionTable(name = "chat_users",joinColumns = @JoinColumn(name="user_id"))
-    Set<Chat> chats;
+//    @OneToMany
+//    @CollectionTable(name = "chat_users",joinColumns = @JoinColumn(name="user_id"))
+//    Set<Chat> chats;
 
     public User() {
     }

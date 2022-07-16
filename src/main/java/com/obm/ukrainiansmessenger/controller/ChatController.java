@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 
@@ -28,7 +29,7 @@ public class ChatController {
     }
 
     @PostMapping("/createChat")
-    public String createChat(User user,Principal principal, @RequestAttribute(name = "userName") String username){
+    public String createChat(User user,Principal principal, @PathVariable(name = "userName") String username){
 //        Chat chat = new Chat();
 //        System.out.println(userRepository.findByUsername(principal.getName()));
          System.out.println(username);
