@@ -4,24 +4,22 @@ package com.obm.ukrainiansmessenger.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "chats")
-public class Chat {
+@Table(name = "message")
+public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Long chatId;
     private Long senderUserId;
     private Long recipientUserId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String content;
 
-    public User getUser() {
-        return user;
+    public Message() {
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public Message(String name) {
+        this.content = name;
     }
 
     public Long getId() {
@@ -30,6 +28,14 @@ public class Chat {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 
     public Long getSenderUserId() {
@@ -46,5 +52,13 @@ public class Chat {
 
     public void setRecipientUserId(Long recipientUserId) {
         this.recipientUserId = recipientUserId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

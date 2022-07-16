@@ -28,12 +28,13 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-//    @OneToMany
-//    @CollectionTable(name = "chat_users",joinColumns = @JoinColumn(name="user_id"))
-//    Set<Chat> chats;
-
     public User() {
     }
+
+//    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+//    @ElementCollection(targetClass = Chat.class,fetch = FetchType.EAGER)
+//    @CollectionTable(name = "chat_users",joinColumns = @JoinColumn(name="id_user"))
+//    private List<Chat> chats;
 
 
     @Override
