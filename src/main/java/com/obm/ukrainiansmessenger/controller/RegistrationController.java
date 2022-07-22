@@ -16,5 +16,4 @@ public class RegistrationController {
         this.userService = userService;
     }
 
-
 }

@@ -1,19 +1,20 @@
 package com.obm.ukrainiansmessenger.models;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "usr")
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,7 +29,19 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    public User() {
+    @ManyToMany( cascade=CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "usersList")
+    @ToString.Exclude
+    private List<Chat> chat ;
+
+    public Integer getChatWith(User user) {
+        List<Chat> chatList = this.getChat();
+        List<Chat> chatList1 = user.getChat();
+        for (Chat chat : chatList1) {
+            if (chatList.contains(chat)) {
+                return Math.toIntExact(chat.getId());
+            }
+        }
+        return -1;
     }
 
 //    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
@@ -66,5 +79,18 @@ public class User implements UserDetails {
         }
 
         return authorities;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

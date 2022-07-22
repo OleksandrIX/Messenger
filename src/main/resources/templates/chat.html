@@ -1,56 +1,73 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Chat</title>
+    <meta charset="UTF-8">
+    <title>Бесіда</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/app.js"></script>
+    <script src="static/js/scripts.js"></script>
+    <link rel="stylesheet" href="static/css/styleChat.css" />
 </head>
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <!--                    <label for="connect">WebSocket connection:</label>-->
-                    <!--                    <button id="connect" class="btn btn-default" type="submit">Connect</button>-->
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
-                </div>
-            </form>
+<div class="container mt-5">
+<div th:each="chat:${chats}">
+    <form method="get" th:action="'/chat'"  >
+        <div class="wrapper">
+            <input name="id" type="hidden" th:value="${chat.getId}">
+            <button class="slide_from_left" type="submit" ><p th:text="${chat.getName}"></p></button>
         </div>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="name">Send message</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your message here...">
-                </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
-            </form>
-        </div>
+    </form>
+
+
+</div>
+</div>
+<div class="chat_window">
+    <div class="top_menu">
+
+        <div class="title"><p th:text="${recipient}"></p></div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Greetings</th>
-                </tr>
-                </thead>
-                <tbody id="greetings">
-                </tbody>
-            </table>
+    <ul id ="messageArea" class="messages">
+        <input type="hidden" id="id_recipient" th:value="${recipient}">
+        <input name="id_chat" id="chat_id" type="hidden" th:value="${chat_id}">
+        <div th:each="message:${mess}">
+            <li th:class="'message '+${message.getMessageSide}+' appeared'">
+                <div class="avatar"></div>
+                <div class="text_wrapper">
+                    <div class="text" ><p th:text="${message.getMessageContent}"></p></div>
+                </div>
+            </li>
         </div>
-    </div>
+
+
+
+    </ul>
+    <form th:method="get" th:action="@{/chat}">
+        <div class="bottom_wrapper clearfix">
+            <div class="message_input_wrapper">
+                <input id="private-message" class="message_input" placeholder="Type your message here..." />
+            </div>
+            <div class="send_message">
+                <div >
+                    <button id="send-private" class="btn third" type="button">Send</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+<div class="message_template">
+    <li class="message">
+        <div class="avatar"></div>
+        <div class="text_wrapper">
+            <div class="text"></div>
+        </div>
+    </li>
+</div>
+
+
+</body>
 </div>
 </body>
 </html>
-
-

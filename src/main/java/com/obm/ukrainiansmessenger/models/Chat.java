@@ -2,26 +2,41 @@ package com.obm.ukrainiansmessenger.models;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "chats")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long senderUserId;
-    private Long recipientUserId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String userName;
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "chat_user",
+            joinColumns = {@JoinColumn(name = "cht_id")},
+            inverseJoinColumns = {@JoinColumn(name = "usr_id")}
+    )
+    private List<User> usersList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL,
+            orphanRemoval = true,fetch = FetchType.EAGER)
+    private List<Message> messages;
+
+
+
+    public Chat(){}
+
+
+
+    public void setName(String userName) {
+        this.userName = userName;
     }
 
     public Long getId() {
@@ -32,19 +47,45 @@ public class Chat {
         this.id = id;
     }
 
-    public Long getSenderUserId() {
-        return senderUserId;
+    public String getName() {
+
+        String name = " ";
+        for (var user:usersList
+        ) {
+            if (!userName.equals(user.getUsername()) && name.equals(" ")){
+                name+=user.getUsername()+"";
+            }
+            else if (!userName.equals(user.getUsername())){
+                name+=user.getUsername()+", ";
+            }
+        }
+        return name;
     }
 
-    public void setSenderUserId(Long senderUserId) {
-        this.senderUserId = senderUserId;
+
+
+    public List<User> getUsers() {
+        return usersList;
     }
 
-    public Long getRecipientUserId() {
-        return recipientUserId;
+    public void setUsers(User user) {
+        usersList.add(user);
     }
 
-    public void setRecipientUserId(Long recipientUserId) {
-        this.recipientUserId = recipientUserId;
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public List<Message> getSortMessage(){
+
+        return messages.stream().sorted(Comparator.comparing(Message::getTime)).collect(Collectors.toList());
+    }
+    public void addMessage(Message message){
+        this.messages.add(message);
+
     }
 }
