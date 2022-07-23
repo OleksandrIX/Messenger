@@ -19,7 +19,7 @@ public class SecurityController {
     }
 
     @GetMapping("/")
-    public String reg() {
+    public String login() {
         return "login";
     }
 
@@ -52,17 +52,16 @@ public class SecurityController {
         return "activate";
     }
 
-    @GetMapping("/page/registration")
-    public String pageRegistration(){
-        return "page-registration";
-    }
-
     @GetMapping("/page/login")
     public String pageLogin(Model model){
         User user = UserTransporter.getUser();
-        System.out.println(user.getUsername());
         model.addAttribute("user", user);
         return "page-login";
+    }
+
+    @GetMapping("/page/registration")
+    public String pageRegistration(){
+        return "page-registration";
     }
 
     @PostMapping("/page/registration")
