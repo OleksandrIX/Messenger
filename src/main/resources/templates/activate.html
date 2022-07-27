@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>Hello World!</title>
 </head>
 <body>
 <p th:text="${message}"></p>
-
 <form th:action="@{/activate}" method="post">
     <div><label for="code" >Email</label>
         <input type="text" id="code" name="code" placeholder="Code">

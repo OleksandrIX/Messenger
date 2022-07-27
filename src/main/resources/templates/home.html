@@ -4,41 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
 
-<h3>Чати</h3>
-
-<!--/*@thymesVar id="users" type="com.obm.ukrainiansmessenger.controller.ChatController"*/-->
-<div th:each="us :${users}">
-    <div class="item col-xs-4 col-lg-4">
-        <div class="thumbnail">
-            <div class="caption">
-                <!--/*@thymesVar id="getUsername" type="com.obm.ukrainiansmessenger.models.User"*/-->
-                <p class="group inner list-group-item-text" th:text="${us.getUsername()}">
-                </p>
-                <!--                    <a href="/profileus" name="idUser"></a>-->
-            </div>
-            <div th:if="${user.getChatWith(us)}==-1">
-                <form th:method="post" th:action="@{/mes}">
-                    <input type="hidden" th:value="${us.getId()}" name="recipientId">
-                    <div><input type="submit" value="Написати повідомлення"></div>
-                </form>
-            </div>
-            <div th:if="${user.getChatWith(us)}>-1">
-                <form th:method="post" th:action="@{/open}">
-                    <input type="hidden" name="chatId" th:value="${user.getChatWith(us)}">
-                    <div><input type="submit" value="Написати повідомлення"></div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-</div>
+<a th:href="@{/listChats}">All users</a>
+<a th:href="@{/chatRoom}">Chats</a>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
 
 </body>
-
 </html>

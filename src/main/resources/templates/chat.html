@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="static/css/styleChat.css" />
 </head>
 <body>
+<form method="get" th:action="@{/home}"  >
+    <div class="wrapper">
+        <button class="slide_from_left" type="submit" >Home</button>
+    </div>
+</form>
 <div class="container mt-5">
 <div th:each="chat:${chats}">
     <form method="get" th:action="'/chat'"  >
@@ -50,6 +55,7 @@
             </div>
             <div class="send_message">
                 <div >
+                    <input name="id" type="hidden" th:value="${chat_id}">
                     <button id="send-private" class="btn third" type="button">Send</button>
                 </div>
 

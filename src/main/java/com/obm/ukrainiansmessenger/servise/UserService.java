@@ -3,7 +3,6 @@ package com.obm.ukrainiansmessenger.servise;
 import com.obm.ukrainiansmessenger.models.Role;
 import com.obm.ukrainiansmessenger.models.User;
 import com.obm.ukrainiansmessenger.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -27,11 +28,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user.getActivationCode()!=null) {
-            user.setActive(false);
-        }
-        return user;
+        return userRepository.findByUsername(username);
     }
 
     public void addUser(User user){
@@ -65,12 +62,12 @@ public class UserService implements UserDetailsService {
                 code.append(random.nextInt(10));
             }
             user.setActivationCode(String.valueOf(code));
+            userRepository.save(user);
             String message = String.format(
                      "Ласкаво просимо до Українського Месенджера. Ваша код активації %s.",
                     user.getActivationCode()
             );
             mailSender.send(user.getEmail(), "Код активації", message);
-            userRepository.save(user);
         }
 
         return true;
@@ -94,5 +91,17 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
         return true;
+    }
+
+    public User findByUsername(String name) {
+        return userRepository.findByUsername(name);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 }

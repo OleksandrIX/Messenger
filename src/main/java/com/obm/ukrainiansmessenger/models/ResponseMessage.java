@@ -1,5 +1,6 @@
 package com.obm.ukrainiansmessenger.models;
 
+import lombok.Data;
 
 public class ResponseMessage {
     private String content;

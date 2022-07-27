@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>Чати</h3>
+<div th:each="us :${users}">
+    <div class="item col-xs-4 col-lg-4">
+        <div class="thumbnail">
+            <div class="caption">
+                <!--/*@thymesVar id="getUsername" type="com.obm.ukrainiansmessenger.models.User"*/-->
+                <p class="group inner list-group-item-text" th:text="${us.getUsername()}">
+                </p>
+                <!--                    <a href="/profileus" name="idUser"></a>-->
+            </div>
+            <div th:if="${user.getChatWith(us)}==-1">
+                <form th:method="post" th:action="@{/mes}">
+                    <input type="hidden" th:value="${us.getId()}" name="recipientId">
+                    <div><input type="submit" value="Створити чат"></div>
+                </form>
+            </div>
+            <!--     <div th:if="${user.getChatWith(us)}>-1">
+                    <form th:method="get" th:action="@{/chat}">
+                        <input type="hidden" name="chatId" th:value="${chats.stream().filter(Chat::).findAny().get().getId()}">
+                        <div><input type="submit" value="Написати повідомлення"></div>
+                    </form>
+                </div>-->
+            </div>
+        </div>
+    </div>
+
+    </body>
+    </html>

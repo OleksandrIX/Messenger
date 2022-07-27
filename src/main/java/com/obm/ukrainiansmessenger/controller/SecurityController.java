@@ -20,11 +20,11 @@ public class SecurityController {
 
     @GetMapping("/")
     public String login() {
-        return "login";
+        return "index";
     }
 
     @PostMapping("/")
-    public String addUser(@RequestParam("email") String email, Model model) {
+    public String addUser(@RequestParam("email") String email) {
         if (userService.searchEmailInDB(email)) {
             User user = new User();
             user.setEmail(email);
@@ -44,33 +44,35 @@ public class SecurityController {
         if (user.getActivationCode() == null) {
             UserTransporter.setUser(user);
             if (user.getUsername()==null && user.getPassword()==null) {
-                return "redirect:/page/registration";
+                return "redirect:/registration";
             }else {
-                return "redirect:/page/login";
+                return "redirect:/login";
             }
+        }else {
+            model.addAttribute("message","Confirmation code entered incorrectly");
         }
         return "activate";
     }
 
-    @GetMapping("/page/login")
+    @GetMapping("/login")
     public String pageLogin(Model model){
         User user = UserTransporter.getUser();
         model.addAttribute("user", user);
-        return "page-login";
+        return "login";
     }
 
-    @GetMapping("/page/registration")
+    @GetMapping("/registration")
     public String pageRegistration(){
-        return "page-registration";
+        return "registration";
     }
 
-    @PostMapping("/page/registration")
+    @PostMapping("/registration")
     public String pageRegistration(@RequestParam("username")String username,
                                    @RequestParam("password")String password){
         User user = UserTransporter.getUser();
         if(userService.save(username,password,user)){
-            return "redirect:/page/login";
+            return "redirect:/login";
         }
-        return "page-registration";
+        return "registration";
     }
 }

@@ -8,9 +8,9 @@
 <div class="container mt-5"></div>
 
 <div th:each="chat:${chats}">
-    <form method="get" th:action="'/chat'"  >
+    <form method="get" th:action="@{/chat}"  >
         <div class="wrapper">
-            <input name="id" type="hidden" th:value="${chat.getId}">
+            <input name="id" type="hidden" th:value="${chat.getId()}">
             <button class="slide_from_left" type="submit" ><p th:text="${chat.getName}"></p></button>
         </div>
     </form>

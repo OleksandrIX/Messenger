@@ -26,13 +26,12 @@ public class Chat {
     private List<User> usersList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL,
-            orphanRemoval = true,fetch = FetchType.EAGER)
+            orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Message> messages;
 
 
-
-    public Chat(){}
-
+    public Chat() {
+    }
 
 
     public void setName(String userName) {
@@ -50,18 +49,16 @@ public class Chat {
     public String getName() {
 
         String name = " ";
-        for (var user:usersList
+        for (var user : usersList
         ) {
-            if (!userName.equals(user.getUsername()) && name.equals(" ")){
-                name+=user.getUsername()+"";
-            }
-            else if (!userName.equals(user.getUsername())){
-                name+=user.getUsername()+", ";
+            if (!userName.equals(user.getUsername()) && name.equals(" ")) {
+                name += user.getUsername() + "";
+            } else if (!userName.equals(user.getUsername())) {
+                name += user.getUsername() + ", ";
             }
         }
         return name;
     }
-
 
 
     public List<User> getUsers() {
@@ -80,12 +77,20 @@ public class Chat {
         this.messages = messages;
     }
 
-    public List<Message> getSortMessage(){
+    public List<Message> getSortMessage() {
 
         return messages.stream().sorted(Comparator.comparing(Message::getTime)).collect(Collectors.toList());
     }
-    public void addMessage(Message message){
+
+    public void addMessage(Message message) {
         this.messages.add(message);
 
+    }
+
+    public boolean contains(User user) {
+        if (usersList.contains(user)) {
+            return true;
+        }
+        return false;
     }
 }
