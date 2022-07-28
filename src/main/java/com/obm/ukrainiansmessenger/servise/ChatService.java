@@ -2,9 +2,10 @@ package com.obm.ukrainiansmessenger.servise;
 
 import com.obm.ukrainiansmessenger.models.Chat;
 import com.obm.ukrainiansmessenger.repository.ChatRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class ChatService  {
@@ -18,7 +19,7 @@ public class ChatService  {
         chatRepository.save(chat);
     }
 
-    public Optional<Chat> findById(Long id) {
-        return chatRepository.findById(id);
+    public Chat findById(Long id) {
+        return chatRepository.findById(id).get();
     }
 }
