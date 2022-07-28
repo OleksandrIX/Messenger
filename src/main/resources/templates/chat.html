@@ -50,7 +50,7 @@
         <form th:method="get" th:action="@{/chat}">
             <div class="bottom_wrapper clearfix">
                 <div class="message_input_wrapper">
-                    <input id="private-message" class="message_input" placeholder="Type your message here..."/>
+                    <input autofocus id="private-message" class="message_input" placeholder="Type your message here..."/>
                 </div>
                 <div class="send_message">
                     <div>
@@ -74,13 +74,30 @@
 </div>
 
 <div th:if="${chat_id}==null">
-    <div th:each="chat:${chats}">
-        <form method="get" th:action="@{/chat}">
-            <div class="wrapper">
-                <input name="id" type="hidden" th:value="${chat.getId()}">
-                <button class="slide_from_left" type="submit"><p th:text="${chat.getName}"></p></button>
-            </div>
-        </form>
+<!--    <div th:each="chat:${chats}">-->
+<!--        <form method="get" th:action="@{/chat}">-->
+<!--            <div class="wrapper">-->
+<!--                <input name="id" type="hidden" th:value="${chat.getId()}">-->
+<!--                <button class="slide_from_left" type="submit"><p th:text="${chat.getName}"></p></button>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--    </div>-->
+    <div th:each="us : ${users}">
+        <div th:if="${user.getChatWith(us)}==-1">
+            <form th:method="post" th:action="@{/mes}">
+                <input type="hidden" th:value="${us.getId()}" name="recipientId">
+                <label th:text="${us.getUsername()}"></label>
+                <div><input type="submit" value="Створити чат"></div>
+            </form>
+        </div>
+
+        <div th:if="${user.getChatWith(us)}>-1">
+            <form th:method="post" th:action="@{/open}">
+                <input type="hidden" name="userId" th:value="${us.getId()}">
+                <label th:text="${us.getUsername()}"></label>
+                <div><input type="submit" value="Написати повідомлення"></div>
+            </form>
+        </div>
     </div>
 </div>
 

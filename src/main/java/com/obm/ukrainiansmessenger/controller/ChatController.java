@@ -35,31 +35,22 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-
-    @GetMapping("/listChats")
-    public String userList(Principal principal, Model model) {
-        User user = userService.findByUsername(principal.getName());
-        List<User> userList = userService.findAll();
-        List<Chat> chatList = userService.findByUsername(principal.getName()).getChat();
-        userList.remove(user);
-        model.addAttribute("users", userList);
-        model.addAttribute("user", user);
-        model.addAttribute("chats", chatList);
-        return "listChats";
-    }
-
     @GetMapping("/chat")
     public String chat(@RequestParam(value = "id", required = false) Long id, Principal principal, Model model) {
         List<Chat> chatList = userService.findByUsername(principal.getName()).getChat();
+        List<User> userList = userService.findAll();
+        userList.remove(userService.findByUsername(principal.getName()));
+        User user = userService.findByUsername(principal.getName());
         for (Chat chat : chatList) {
             chat.setName(principal.getName());
         }
         if (id!=null) {
             model.addAttribute("chats", chatList);
-            model.addAttribute("recipient",
-                    chatService.findById(id).getUsers().stream()
-                            .filter(x -> !(x.getUsername().equals(principal.getName())))
-                            .collect(Collectors.toList()).get(0).getUsername());
+            String recipient = chatService.findById(id).getUsers().stream()
+                    .filter(x -> !(x.getUsername().equals(principal.getName())))
+                    .toList().get(0).getUsername();
+
+            model.addAttribute("recipient",recipient);
             model.addAttribute("chat_id", id);
             var messages = chatService.findById(id).getSortMessage();
             for (var mes : messages) {
@@ -71,6 +62,8 @@ public class ChatController {
         } else {
             model.addAttribute("chat_id", id);
             model.addAttribute("chats", chatList);
+            model.addAttribute("users", userList);
+            model.addAttribute("user", user);
         }
 
         return "chat";
@@ -79,23 +72,34 @@ public class ChatController {
     @PostMapping("/mes")
     public String createChat(@RequestParam("recipientId") Long id, Principal principal, Model model, final @RequestParam(value = "image", required = false) MultipartFile file) {
         User user = userService.findByUsername(principal.getName());
-        Optional<User> friend = userService.findById(id);
+        User friend = userService.findById(id);
         Chat chat = new Chat();
 
         chat.setUsers(user);
-        chat.setUsers(friend.get());
-        chat.setName(user.getUsername() + "-" + friend.get().getUsername());
+        chat.setUsers(friend);
+        chat.setName(user.getUsername() + "-" + friend.getUsername());
         chatService.save(chat);
         model.addAttribute("chat", chat);
         model.addAttribute("user", user);
-        return "redirect:/chat";
+        return "redirect:/chat?id="+chat.getId();
+    }
+
+    @PostMapping("/open")
+    public String openChar(@RequestParam("userId") Long id, Model model, Principal principal) {
+        User user = userService.findById(id);
+        User authUser = userService.findByUsername(principal.getName());
+        List<Chat> chatList = user.getChat();
+        Chat chat = chatList.stream().filter(cht->cht.contains(authUser)).findAny().get();
+        model.addAttribute("chat", chat);
+        model.addAttribute("user", user);
+        return "redirect:/chat?id="+chat.getId();
     }
 
     @MessageMapping("/private-message")
     @SendToUser("/topic/private-messages")
     public ResponseMessage getPrivateMessage(final Message message,
                                              final Principal principal) throws InterruptedException, ParseException {
-        Thread.sleep(1);
+        Thread.sleep(0,100);
         Message newMessage = new Message(message.getMessageContent(), principal.getName(),
                 message.getRecipient(), message.getMessageSide(), message.getChat_id());
         service.notifyUser(newMessage);

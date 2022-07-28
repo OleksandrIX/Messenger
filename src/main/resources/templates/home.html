@@ -4,14 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/static/css/styleHome.css">
 </head>
 <body>
 
-<a th:href="@{/listChats}">All users</a>
-<a th:href="@{/chat}">Chats</a>
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sign Out"/>
-</form>
+<div class="action">
+    <div class="profile" onclick="menuToggle();">
+        <img src="/static/img/img.jpg">
+    </div>
+    <div class="menu">
+        <h3>Someone Famous<br><span>Website Designer</span></h3>
+        <ul>
+            <li><img src="/static/img/user.png"><a href="#">My Profile</a></li>
+            <li><img src="/static/img/edit.png"><a href="#">Edit Profile</a></li>
+            <li><img src="/static/img/inbox.png"><a th:href="@{/chat}">Inbox</a></li>
+            <li><img src="/static/img/settings.png"><a href="#">Settings</a></li>
+            <li><img src="/static/img/help.png"><a href="#">Help</a></li>
+        </ul>
+        <form method="post" th:action="@{/logout}">
+            <ul>
+                <li><img src="/static/img/logout.png"><button class="btn" type="submit">Log out</button></li>
+            </ul>
+        </form>
+    </div>
+</div>
+<script>
+    function menuToggle(){
+        const toggleMenu = document.querySelector('.menu');
+        toggleMenu.classList.toggle('active')
+    }
+</script>
 
 </body>
 </html>
